@@ -1,0 +1,12 @@
+services:
+  temporal:
+    image: temporalio/auto-setup:latest  # pin a version tag on first use
+    ports: ["7233:7233"]
+    environment:
+      DB: sqlite  # dev only; use postgres for anything real
+  temporal-ui:
+    image: temporalio/ui:latest  # pin a version tag on first use
+    ports: ["8080:8080"]
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+    depends_on: [temporal]

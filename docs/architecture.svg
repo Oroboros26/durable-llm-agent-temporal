@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 760" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker>
+    <filter id="s" x="-5%" y="-5%" width="110%" height="115%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".12"/></filter>
+  </defs>
+  <rect width="1240" height="760" fill="#f8fafc"/>
+  <text x="620" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">durable-agent-temporal: an agent loop that survives kill -9</text>
+
+  <!-- PANEL 1 -->
+  <text x="30" y="68" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">A · HOW IT IS WIRED</text>
+  <rect x="20" y="76" width="1200" height="290" rx="12" fill="#eef2ff" stroke="#c7d2fe"/>
+  <g filter="url(#s)" font-size="13" text-anchor="middle" fill="#0f172a">
+    <rect x="40" y="110" width="150" height="86" rx="10" fill="#fff" stroke="#6366f1"/>
+    <text x="115" y="138" font-weight="700">Client / CLI</text>
+    <text x="115" y="158">start task · status</text>
+    <text x="115" y="177" fill="#64748b">query pending step</text>
+
+    <rect x="40" y="250" width="150" height="86" rx="10" fill="#fff" stroke="#dc2626"/>
+    <text x="115" y="278" font-weight="700">Human approver</text>
+    <text x="115" y="298">signal approve(key, yes/no)</text>
+    <text x="115" y="317" fill="#64748b">may arrive days later</text>
+
+    <rect x="290" y="100" width="260" height="236" rx="12" fill="#fff" stroke="#0f766e" stroke-width="2"/>
+    <text x="420" y="128" font-weight="700" font-size="15">Temporal server</text>
+    <text x="420" y="146" fill="#64748b">survives worker crashes</text>
+    <rect x="310" y="160" width="220" height="50" rx="8" fill="#ecfdf5" stroke="#0f766e"/>
+    <text x="420" y="182" font-weight="700">Event history (durable)</text>
+    <text x="420" y="199" fill="#64748b">every result, signal, timer</text>
+    <rect x="310" y="222" width="220" height="44" rx="8" fill="#ecfdf5" stroke="#0f766e"/>
+    <text x="420" y="249">Task queue · retry timers</text>
+    <rect x="310" y="276" width="220" height="44" rx="8" fill="#ecfdf5" stroke="#0f766e"/>
+    <text x="420" y="303">Signals · queries · timeouts</text>
+
+    <rect x="640" y="90" width="340" height="256" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2" stroke-dasharray="7 4"/>
+    <text x="810" y="114" font-weight="700" font-size="15">Worker process (killable)</text>
+    <rect x="660" y="128" width="300" height="92" rx="8" fill="#fff" stroke="#ea580c"/>
+    <text x="810" y="152" font-weight="700">Workflow: agent loop</text>
+    <text x="810" y="172">history · step counter · approval wait</text>
+    <text x="810" y="192" fill="#b45309">deterministic: no I/O, no clock</text>
+    <text x="810" y="210" fill="#b45309">replayed after a crash</text>
+    <rect x="660" y="240" width="300" height="92" rx="8" fill="#fff" stroke="#ea580c"/>
+    <text x="810" y="264" font-weight="700">Activities: side effects</text>
+    <text x="810" y="284">llm_call · run_tool</text>
+    <text x="810" y="304" fill="#b45309">retry + timeout each</text>
+    <text x="810" y="322" fill="#b45309">idempotency key = wf:step:i</text>
+
+    <rect x="1040" y="102" width="160" height="56" rx="10" fill="#fff" stroke="#6366f1"/>
+    <text x="1120" y="126" font-weight="700">LLM API</text><text x="1120" y="146" fill="#64748b">non-deterministic</text>
+    <rect x="1040" y="178" width="160" height="56" rx="10" fill="#fff" stroke="#6366f1"/>
+    <text x="1120" y="202" font-weight="700">sales.db (read-only)</text><text x="1120" y="222" fill="#64748b">describe · run_sql</text>
+    <rect x="1040" y="254" width="160" height="82" rx="10" fill="#fff" stroke="#dc2626"/>
+    <text x="1120" y="278" font-weight="700">Outbox + CSV files</text><text x="1120" y="298" fill="#64748b">INSERT OR IGNORE by key</text><text x="1120" y="318" fill="#dc2626">risky: needs approval</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" fill="none" marker-end="url(#a)" marker-start="url(#a)">
+    <path d="M190 153H286"/>
+    <path d="M550 175H636"/>
+    <path d="M810 222V238"/>
+    <path d="M962 270L1036 132"/><path d="M962 285L1036 205"/><path d="M962 300L1036 292"/>
+  </g>
+  <path d="M190 293H260V280" stroke="#dc2626" stroke-width="2" fill="none"/>
+  <path d="M190 293H286" stroke="#dc2626" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="590" y="166" font-size="11" fill="#475569" text-anchor="middle">poll / complete</text>
+
+  <!-- PANEL 2 -->
+  <text x="30" y="400" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">B · KILL THE WORKER MID-RUN</text>
+  <rect x="20" y="408" width="1200" height="300" rx="12" fill="#ecfdf5" stroke="#a7f3d0"/>
+  <text x="40" y="444" font-size="13" font-weight="700" fill="#0f172a">Event history (server)</text>
+  <g font-size="12" text-anchor="middle" fill="#0f172a" filter="url(#s)">
+    <rect x="40" y="456" width="120" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="100" y="483">Started</text>
+    <rect x="170" y="456" width="120" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="230" y="483">llm_call ✓</text>
+    <rect x="300" y="456" width="120" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="360" y="483">run_sql ✓</text>
+    <rect x="430" y="456" width="120" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="490" y="483">export_csv ✓</text>
+    <rect x="560" y="456" width="130" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="625" y="483">approval signal ✓</text>
+    <rect x="700" y="456" width="150" height="44" rx="8" fill="#fef3c7" stroke="#d97706" stroke-dasharray="5 3"/><text x="775" y="476">send_email</text><text x="775" y="491" fill="#b45309">scheduled, no result</text>
+    <rect x="900" y="456" width="150" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="975" y="476">send_email ✓</text><text x="975" y="491" fill="#0f766e">retry, key deduped</text>
+    <rect x="1060" y="456" width="130" height="44" rx="8" fill="#fff" stroke="#0f766e"/><text x="1125" y="483">final answer ✓</text>
+  </g>
+
+  <text x="40" y="552" font-size="13" font-weight="700" fill="#0f172a">Worker</text>
+  <rect x="40" y="566" width="700" height="34" rx="6" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="390" y="588" font-size="12" text-anchor="middle" fill="#7c2d12">Worker #1 running</text>
+  <text x="775" y="560" font-size="22" text-anchor="middle" fill="#dc2626">✖</text>
+  <text x="775" y="618" font-size="12" text-anchor="middle" fill="#dc2626" font-weight="700">kill -9 during email</text>
+  <rect x="810" y="566" width="90" height="34" rx="6" fill="none" stroke="#94a3b8" stroke-dasharray="4 3"/>
+  <text x="855" y="588" font-size="11" text-anchor="middle" fill="#64748b">down</text>
+  <rect x="900" y="566" width="290" height="34" rx="6" fill="#fed7aa" stroke="#ea580c"/>
+  <text x="1045" y="588" font-size="12" text-anchor="middle" fill="#7c2d12">Worker #2: replays history, resumes</text>
+
+  <g font-size="12" fill="#0f172a">
+    <text x="40" y="650" font-weight="700">What the replay does</text>
+    <text x="40" y="670">1. Worker #2 re-runs the workflow code from the top. Completed steps return their recorded results; they are not executed again.</text>
+    <text x="40" y="688">2. The email attempt that died is retried with the same key. The outbox INSERT OR IGNORE makes a second send a no-op: 0 duplicates.</text>
+  </g>
+
+  <text x="40" y="738" font-size="12" fill="#475569">Design diagram: see the README for what is implemented.</text>
+</svg>

@@ -1,0 +1,15 @@
+[project]
+name = "durable-llm-agent-temporal"
+version = "0.1.0"
+requires-python = ">=3.11"
+# pin exact versions with `uv lock` on first install
+dependencies = ["temporalio", "anthropic"]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.setuptools.packages.find]
+where = ["src"]
